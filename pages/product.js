@@ -2,10 +2,21 @@ import Navbar from "@/component/Navbar";
 import React from "react";
 import Link from "next/link";
 import Countdown from 'react-countdown';
+import { firestore } from '../firebase/firebase';
 import { FiClock } from 'react-icons/fi';
+import { useState, useEffect } from "react";
 
 export default function product() {
   const Completionist = () => <span>Time's up!</span>;
+  const [currentBid, setCurrentBid] = useState()
+  
+  useEffect(() => {
+    const getBidData = async () => {
+      const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF').get()
+      setCurrentBid(bidData.data().bidPrice)
+    }
+    getBidData()
+  },[])
 
   return (
     <>
@@ -97,7 +108,7 @@ export default function product() {
 
                     <div>
                       <p className="text-right animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
-                        Current bid $450.00
+                        Current bid ${currentBid}
                       </p>
                       {/* <div className="z-50 cursor-pointer">
                         <p className="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm text-center font-bold bg-indigo-600 text-white">

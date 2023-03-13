@@ -25,14 +25,14 @@ export default function checkOut() {
                           <div class="w-full mx-auto text-gray-800 font-light mb-6 border-b border-gray-200 pb-6">
                               <div class="w-full flex items-center">
                                   <div class="overflow-hidden rounded-lg w-16 h-16 bg-gray-50 border border-gray-200">
-                                      <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1160&q=80" alt=""/>
+                                      <img src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png" alt=""/>
                                   </div>
                                   <div class="flex-grow pl-3">
-                                      <h6 class="font-semibold uppercase text-gray-600">Ray Ban Sunglasses.</h6>
+                                      <h6 class="font-semibold uppercase text-gray-600">Bang & Olufsen Beoplay M5</h6>
                                       <p class="text-gray-400">x 1</p>
                                   </div>
                                   <div>
-                                      <span class="font-semibold text-gray-600 text-xl">$210</span><span class="font-semibold text-gray-600 text-sm">.00</span>
+                                      <span class="font-semibold text-gray-600 text-xl">$405</span><span class="font-semibold text-gray-600 text-sm">.00</span>
                                   </div>
                               </div>
                           </div>
@@ -55,7 +55,7 @@ export default function checkOut() {
                                       <span class="text-gray-600">Subtotal</span>
                                   </div>
                                   <div class="pl-3">
-                                      <span class="font-semibold">$190.91</span>
+                                      <span class="font-semibold">$376.65</span>
                                   </div>
                               </div>
                               <div class="w-full flex items-center">
@@ -63,7 +63,7 @@ export default function checkOut() {
                                       <span class="text-gray-600">Taxes (GST)</span>
                                   </div>
                                   <div class="pl-3">
-                                      <span class="font-semibold">$19.09</span>
+                                      <span class="font-semibold">$28.35</span>
                                   </div>
                               </div>
                           </div>
@@ -73,7 +73,7 @@ export default function checkOut() {
                                       <span class="text-gray-600">Total</span>
                                   </div>
                                   <div class="pl-3">
-                                      <span class="font-semibold text-gray-400 text-sm">USD</span> <span class="font-semibold">$210.00</span>
+                                      <span class="font-semibold text-gray-400 text-sm">USD</span> <span class="font-semibold">$405.00</span>
                                   </div>
                               </div>
                           </div>

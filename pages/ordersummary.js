@@ -7,7 +7,7 @@ export default function orderSummary() {
         {
             id: 1,
             name: 'Distant Mountains Artwork Tee',
-            price: '$36.00',
+            price: '$405.00',
             description: 'You awake in a new, mysterious land. Mist hangs low along the distant mountains. What does it mean?',
             address: ['Floyd Miles', '7363 Cynthia Pass', 'Toronto, ON N3Y 4H8'],
             email: 'f•••@example.com',
@@ -17,8 +17,8 @@ export default function orderSummary() {
             step: 1,
             date: 'March 24, 2021',
             datetime: '2021-03-24',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/confirmation-page-04-product-01.jpg',
-            imageAlt: 'Off-white t-shirt with circular dot illustration on the front of mountain ridges that fade.',
+            imageSrc: 'https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png',
+            imageAlt: 'Bang & Olufsen Beoplay M5',
         },
         // More products...
     ]
@@ -176,25 +176,26 @@ export default function orderSummary() {
                         <dl className="mt-8 divide-y divide-gray-200 text-sm lg:mt-0 lg:pr-8 lg:col-span-7">
                             <div className="pb-4 flex items-center justify-between">
                                 <dt className="text-gray-600">Subtotal</dt>
-                                <dd className="font-medium text-gray-900">$72</dd>
+                                <dd className="font-medium text-gray-900">$405</dd>
                             </div>
                             <div className="py-4 flex items-center justify-between">
                                 <dt className="text-gray-600">Shipping</dt>
-                                <dd className="font-medium text-gray-900">$5</dd>
+                                <dd className="font-medium text-gray-900">$50</dd>
                             </div>
                             <div className="py-4 flex items-center justify-between">
                                 <dt className="text-gray-600">Tax</dt>
-                                <dd className="font-medium text-gray-900">$6.16</dd>
+                                <dd className="font-medium text-gray-900">$7.69</dd>
                             </div>
                             <div className="pt-4 flex items-center justify-between">
                                 <dt className="font-medium text-gray-900">Order total</dt>
-                                <dd className="font-medium text-indigo-600">$83.16</dd>
+                                <dd className="font-medium text-indigo-600">$478.69</dd>
                             </div>
                         </dl>
                     </div>
                 </div>
             </div>
-        </div></>
+        </div>
+        </>
     )
 }
 

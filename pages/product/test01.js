@@ -1,34 +1,16 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    theme: {
-      extend: {
-        gridTemplateRows: {
-          '[auto,auto,1fr]': 'auto auto 1fr',
-        },
-      },
-    },
-    plugins: [
-      // ...
-      require('@tailwindcss/aspect-ratio'),
-    ],
-  }
-  ```
-*/
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
 import Navbar from "@/component/Navbar";
 import Countdown from "react-countdown";
 import { FiClock } from "react-icons/fi";
 import Swal from 'sweetalert2'
+import { firestore } from '../../firebase/firebase';
+import moment from 'moment'
+
 
 const product = {
-  name: "Basic Tee 6-Pack",
+  name: "Bang & Olufsen Beoplay M5 Wireless Multiroom Speaker with 360-Degree Sound, Natural",
   price: 405.00,
   forceBuyPrice: 1099.00,
   href: "#",
@@ -38,19 +20,19 @@ const product = {
   ],
   images: [
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-secondary-product-shot.jpg",
+      src: "https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png",
       alt: "Two each of gray, white, and black shirts laying flat.",
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-01.jpg",
+      src: "https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png",
       alt: "Model wearing plain black basic tee.",
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-tertiary-product-shot-02.jpg",
+      src: "https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png",
       alt: "Model wearing plain gray basic tee.",
     },
     {
-      src: "https://tailwindui.com/img/ecommerce-images/product-page-02-featured-product-shot.jpg",
+      src: "https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-1.png",
       alt: "Model wearing plain white basic tee.",
     },
   ],
@@ -70,15 +52,15 @@ const product = {
     { name: "3XL", inStock: true },
   ],
   description:
-    'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
+    'They are slightly different audio players. The Bluesound Pulse mini is more of an all-in-one stereo system and it sounds really good. The M5 is more of that single speaker system that emits sound in multiple directions to fill a room. If you want good general stereo sound, then the Bluesound is the way to go. If you want something that looks cooler, with designer style and fills a room for more general listening, then the M5 is the way to go.',
   highlights: [
-    "Hand cut and sewn locally",
-    "Dyed with our proprietary colors",
-    "Pre-washed & pre-shrunk",
-    "Ultra-soft 100% cotton",
+    "True360 Bang & Olufsen Signature Sound Crafted aluminum top with smooth tactile interaction",
+    "Wireless, multi-room enabled speaker fills your home with music",
+    "Personalize your listening experience through the Beoplay App",
+    "Connect with Beoplay’s A6 or A9 wireless speakers for seamless sound throughout your home, using Chromecast Built-in, Beolink Multiroom technologies or connect via Bluetooth, Apple AirPlay, and DLNA.",
   ],
   details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
+    'Products with electrical plugs are designed for use in the US. Outlets and voltage differ internationally and this product may require an adapter or converter for use in your destination. Please check compatibility before purchasing.',
 };
 const reviews = { href: "#", average: 4, totalCount: 117 };
 
@@ -87,11 +69,28 @@ function classNames(...classes) {
 }
 
 export default function Example() {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
-  const [currentBid, setCurrentBid] = useState(405)
+  const [currentBid, setCurrentBid] = useState()
   const [bidPrice, setBidPrice] = useState()
-  const [showInputBid , setShowInputBid] = useState(false)
+  const [showInputBid, setShowInputBid] = useState(false)
+  const [currentTime, setCurrentTime] = useState(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"))
+
+  useEffect(() => {
+    const getBidData = async () => {
+      const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF').get()
+      setCurrentBid(bidData.data().bidPrice)
+      setCurrentTime((new Date(bidData.data().timeStamp)))
+      console.log(typeof(bidData.data().timeStamp));
+    }
+    getBidData()
+  }, [])
+
+  const handleAddBid = async () => {
+    const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF')
+    bidData.set({
+      bidPrice: bidPrice,
+      timeStamp: new Date().valueOf()
+    })
+  }
 
   const biddingFunction = () => {
     if (bidPrice > currentBid) {
@@ -102,6 +101,7 @@ export default function Example() {
         text: 'Your bid is accepted!',
       })
       setShowInputBid(false)
+      handleAddBid()
     } else {
       console.log("โง่")
       Swal.fire({
@@ -137,8 +137,6 @@ export default function Example() {
       </div>
     );
   };
-
-
 
   return (
     <>
@@ -229,13 +227,13 @@ export default function Example() {
               <div className=" flex text-lg mt-5 font-semibold tracking-tight gap-10 text-gray-900 bg-gray-100 px-5  p-3 rounded-lg">
                 <div className="font-semibold">
                   <div>Current Bid by @Thada</div>
-                  <div className="text-gray-400">10 March 2022 at 19:30 PM</div>
+                  <div className="text-gray-400 text-sm"> {moment(currentTime.toString()).format('MMMM Do YYYY, h:mm:ss a')} </div>
                 </div>
-                <div className="text-2xl align-middle flex items-center  ">$ {currentBid}</div>  
-                           
+                <div className="text-2xl align-middle flex items-center  ">$ {currentBid}</div>
+
               </div>
-              <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700" 
-              onClick={() => setShowInputBid(!showInputBid)}
+              <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
+                onClick={() => setShowInputBid(!showInputBid)}
               >
                 Place a Bid
               </div>
@@ -271,7 +269,7 @@ export default function Example() {
                 </div>
               )}
 
-              <div className="bg-yellow-600 text-white text-center font-semibold p-3 mt-4 rounded-lg cursor-pointer hover:bg-yellow-700" 
+              <div className="bg-yellow-600 text-white text-center font-semibold p-3 mt-4 rounded-lg cursor-pointer hover:bg-yellow-700"
                 onClick={() => forceBuy()}
               >
                 Force Buy $ {product.forceBuyPrice}
@@ -299,7 +297,7 @@ export default function Example() {
                     : ""}
                 </div>
               </form> */}
-              
+
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">
