@@ -29,7 +29,8 @@ import Swal from 'sweetalert2'
 
 const product = {
   name: "Basic Tee 6-Pack",
-  price: 405,
+  price: 405.00,
+  forceBuyPrice: 1099.00,
   href: "#",
   breadcrumbs: [
     { id: 1, name: "Men", href: "#" },
@@ -88,20 +89,61 @@ function classNames(...classes) {
 export default function Example() {
   const [selectedColor, setSelectedColor] = useState(product.colors[0]);
   const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
-  const [currentBid , setCurrentBid] = useState(405)
-  const [bidPrice , setBidPrice] = useState()
+  const [currentBid, setCurrentBid] = useState(405)
+  const [bidPrice, setBidPrice] = useState()
+  const [showInputBid , setShowInputBid] = useState(false)
+
   const biddingFunction = () => {
-    if (bidPrice > currentBid){
-        setCurrentBid(bidPrice)
+    if (bidPrice > currentBid) {
+      setCurrentBid(bidPrice)
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Your bid is accepted!',
+      })
+      setShowInputBid(false)
     } else {
-        console.log("โง่")
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'โง่!',
-          })
+      console.log("โง่")
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Your bid is too low!',
+      })
     }
   }
+
+  const forceBuy = () => {
+    Swal.fire({
+      title: 'Are you sure to buy this item?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, force buy it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Success!',
+          'Your item has been force bought.',
+          'success'
+        )
+      }
+    })
+  }
+
+  const renderer = ({ days, hours, minutes, seconds }) => {
+    return (
+      <div className="flex gap-1">
+        <span>{days}d</span>
+        <span>{hours}h</span>
+        <span>{minutes}m</span>
+        <span>{seconds}s</span>
+      </div>
+    );
+  };
+
+
+
   return (
     <>
       <Navbar />
@@ -152,9 +194,7 @@ export default function Example() {
             {/* Options */}
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl font-bold tracking-tight text-gray-900">
-                Current Bids : ${currentBid}
-              </p>
+
 
               {/* Reviews */}
               {/* <div className="mt-6">
@@ -182,34 +222,88 @@ export default function Example() {
               {/* CountDown */}
               <div className="mt-6">
                 <h3 className="sr-only">Reviews</h3>
+                <p className="mb-2 font-semibold text-gray-400">Time Left</p>
                 <div className="flex items-center">
-                  <div className="flex gap-3 items-center text-xl font-semibold"><FiClock/>
-                    <Countdown date={Date.now() + 1022223100}>
-                      {/* <Completionist/> */}
+                  <div className="flex gap-3 items-center text-xl font-semibold">
+                    <Countdown date={Date.now() + 1022223100} renderer={renderer}>
                     </Countdown>
                   </div>
                 </div>
               </div>
+              <div className=" flex text-lg mt-5 font-semibold tracking-tight gap-10 text-gray-900 bg-gray-100 px-5  p-3 rounded-lg">
+                <div className="font-semibold">
+                  <div>Current Bid by @Thada</div>
+                  <div className="text-gray-400">10 March 2022 at 19:30 PM</div>
+                </div>
+                <div className="text-2xl align-middle flex items-center  ">$ {currentBid}</div>  
+                           
+              </div>
+              <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700" 
+              onClick={() => setShowInputBid(!showInputBid)}
+              >
+                Place a Bid
+              </div>
 
-              <form className="w-full max-w-sm">
-                <div className="mt-5 flex items-center border-b border-indigo-500 py-2">
+              {showInputBid && (
+                <div className="mt-4">
+                  <div className="flex items-center border-b border-indigo-500 py-2">
+                    <input
+                      className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none font-semibold"
+                      type="number"
+                      name="bid"
+                      placeholder="Place a Bid"
+                      aria-label="Full name"
+                      value={bidPrice}
+                      onChange={(e) => { setBidPrice(e.target.value) }}
+                    />
+                    {bidPrice !== "" && bidPrice !== undefined ?
+                      <button
+                        className="font-semibold flex-shrink-0 border-green-700 bg-green-700 text-white hover:bg-white hover:border-white-100 text-sm border-4 hover:text-green-700 py-1 px-2 rounded"
+                        type="button" onClick={() => biddingFunction()}
+                      >
+                        Confirm
+                      </button>
+                      :
+                      <button
+                        className="font-semibold flex-shrink-0 border-red-700 bg-red-700 text-white hover:bg-white hover:border-white-100 text-sm border-4 hover:text-red-700 py-1 px-2 rounded"
+                        type="button" onClick={() => setShowInputBid(!showInputBid)}
+                      >
+                        Cancel
+                      </button>
+                    }
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-yellow-600 text-white text-center font-semibold p-3 mt-4 rounded-lg cursor-pointer hover:bg-yellow-700" 
+                onClick={() => forceBuy()}
+              >
+                Force Buy $ {product.forceBuyPrice}
+              </div>
+
+
+              {/* <form className="w-full max-w-sm">
+                <div className="mt-4 flex items-center border-b border-indigo-500 py-2">
                   <input
-                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+                    className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none font-semibold"
                     type="number"
                     name="bid"
                     placeholder="Place your bid!"
                     aria-label="Full name"
                     value={bidPrice}
-                    onChange={(e) => {setBidPrice(e.target.value)}}
+                    onChange={(e) => { setBidPrice(e.target.value) }}
                   />
-                  <button
-                    className="font-semibold flex-shrink-0 border-indigo-700 bg-indigo-700 text-white hover:bg-white border-indigo-700 hover:border-white-100 text-sm border-4 hover:text-indigo-700 py-1 px-2 rounded"
-                    type="button" onClick={() => biddingFunction()}
-                  >
-                    Confirm
-                  </button>
+                  {bidPrice !== "" && bidPrice !== undefined ?
+                    <button
+                      className="font-semibold flex-shrink-0 border-indigo-700 bg-indigo-700 text-white hover:bg-white hover:border-white-100 text-sm border-4 hover:text-indigo-700 py-1 px-2 rounded"
+                      type="button" onClick={() => biddingFunction()}
+                    >
+                      Confirm
+                    </button>
+                    : ""}
                 </div>
-              </form>
+              </form> */}
+              
             </div>
 
             <div className="py-10 lg:col-span-2 lg:col-start-1 lg:border-r lg:border-gray-200 lg:pt-6 lg:pb-16 lg:pr-8">

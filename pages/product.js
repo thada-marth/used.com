@@ -186,12 +186,12 @@ export default function product() {
                   <p class="text-right animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
                     Current bid $299.00
                   </p>
-                  {/* <div className="z-50 cursor-pointer">
-                    <p class="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white">
+                  <div className="z-50 cursor-pointer">
+                    <p class="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm text-center font-bold bg-indigo-600 text-white">
                       {" "}Force buy
                       $1099.00{" "}
                     </p>
-                  </div> */}
+                  </div>
                 </div>
               </div>
 
@@ -278,7 +278,7 @@ export default function product() {
                     Current bid $450.00
                   </p>
                   <div className="z-50 cursor-pointer">
-                    <p class="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm font-bold bg-indigo-600 text-white">
+                    <p class="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm text-center font-bold bg-indigo-600 text-white">
                       {" "}Force buy
                       $1099.00{" "}
                     </p>
@@ -358,16 +358,22 @@ export default function product() {
                   </div>
                 </div>
 
-                <div class="text-right">
-                  <p class="animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
+                <div>
+                  <p class="text-right animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
                     Current bid $79.00
                   </p>
+                  <div className="z-50 cursor-pointer">
+                    <p class="mt-3 flex justify-center py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm text-center font-bold bg-indigo-600 text-white">
+                      {" "}Force buy
+                      $1099.00{" "}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             <div class="relative group">
-              <div class="overflow-hidden aspect-w-1 aspect-h-1">
+              <div class="overflow-hidden aspect-w-1 aspect-h-1 ">
                 <img
                   class="object-cover w-full h-full transition-all duration-300 group-hover:scale-125"
                   src="https://cdn.rareblocks.xyz/collection/clarity-ecommerce/images/item-cards/4/product-4.png"
@@ -437,10 +443,16 @@ export default function product() {
                   </div>
                 </div>
 
-                <div class="text-right">
-                  <p class="animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
+                <div>
+                  <p class="text-right animate-[pulse_0.7s_ease-in-out_infinite] text-xs font-bold text-green-600 sm:text-sm md:text-base">
                     Current bid $79.00
                   </p>
+                  <div className="z-50 cursor-pointer ">
+                    <p class="mt-3 flex justify-center  py-2 border-2 border-indigo-600 rounded-lg text-xs sm:text-sm text-center font-bold bg-indigo-600 text-white">
+                      {" "}Force buy
+                      $1099.00{" "}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
