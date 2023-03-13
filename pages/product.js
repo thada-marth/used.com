@@ -6,7 +6,7 @@ import { FiClock } from 'react-icons/fi';
 
 export default function product() {
   const Completionist = () => <span>Time's up!</span>;
-  
+
   return (
     <>
       <Navbar />
@@ -108,7 +108,7 @@ export default function product() {
                     </div>
                   </div>
                 </div>
-                
+
               </>
             </Link>
 
