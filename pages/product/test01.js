@@ -122,11 +122,7 @@ export default function Example() {
       confirmButtonText: 'Yes, force buy it!'
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire(
-          'Success!',
-          'Your item has been force bought.',
-          'success'
-        )
+        window.location.href = "/checkout"
       }
     })
   }
