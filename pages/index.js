@@ -3,11 +3,38 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import { useState } from 'react'
+import axios from 'axios';
+import Swal from 'sweetalert2'
+import { googleProvider, auth } from '../firebase/firebase'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+export default function Index() {
 
+
+  const [userData, setUserData] = useState()
+
+
+  const loginWithGoogle = async () => {
+    try {
+        const { user } = await auth.signInWithPopup(googleProvider);
+        // const response = await axios.post('/api/users', {
+        //     username: user.displayName,
+        //     email: user.email,
+        //     uid: user.uid
+        // })
+        
+        
+        window.location.href = '/product';
+    } catch (err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.message,
+        })
+        console.log(err);
+    }
+}
 
   return (
     <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
@@ -17,7 +44,7 @@ export default function Home() {
             <img src={"/used-com.png"} alt="" className='h-40 mb-8 flex items-center ' />
           </div>
           <div className='flex justify-center'>
-            <button className='border-2 bg-white border-gray-300 w font-bold  hover:bg-gray-300 py-2 px-4 flex gap-5 rounded-full'>
+            <button onClick={loginWithGoogle} className='border-2 bg-white border-gray-300 w font-bold  hover:bg-gray-300 py-2 px-4 flex gap-5 rounded-full'>
               <img src={'/Google__G__Logo.svg.png'} alt="" className='h-6' />
               <span>Sign in with Google</span>
             </button>
