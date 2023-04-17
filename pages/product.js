@@ -10,7 +10,7 @@ import { onLogin, getUserByUid, searchUserByEmail } from '../firebase/user';
 export default function product() {
   const Completionist = () => <span>Time's up!</span>;
   const [currentBid, setCurrentBid] = useState()
-  const [userLogin,setUserLogin] = useState(null); 
+  const [userLogin, setUserLogin] = useState(null);
   const scroll = useRef(null);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ export default function product() {
       setCurrentBid(bidData.data().bidPrice)
     }
     getBidData()
-  },[])
+  }, [])
 
   useEffect(() => {
     onLogin((users) => {

@@ -30,7 +30,7 @@ export default function Index() {
       await axios.post('/api/user', userData);
 
       // Redirect to the product page
-      window.location.href = '/';
+      window.location.href = '/option';
     } catch (err) {
       Swal.fire({
         icon: 'error',
@@ -58,7 +58,8 @@ export default function Index() {
         </div>
       </div>
 
-          {/* <div>
+{/* 
+           <div>
             <div className='bg-white p-10 rounded-lg shadow-lg'>
               <div className=''>
                 <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]' />
@@ -70,7 +71,9 @@ export default function Index() {
                 <div className='bg-green-700 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-green-800'>Create</div>
               </div>
             </div>
-          </div>  */}
+          </div>   */}
+        
+      
         
           
       
