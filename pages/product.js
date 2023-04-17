@@ -4,12 +4,15 @@ import Link from "next/link";
 import Countdown from 'react-countdown';
 import { firestore } from '../firebase/firebase';
 import { FiClock } from 'react-icons/fi';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { onLogin, getUserByUid, searchUserByEmail } from '../firebase/user';
 
 export default function product() {
   const Completionist = () => <span>Time's up!</span>;
   const [currentBid, setCurrentBid] = useState()
-  
+  const [userLogin,setUserLogin] = useState(null); 
+  const scroll = useRef(null);
+
   useEffect(() => {
     const getBidData = async () => {
       const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF').get()
@@ -17,6 +20,16 @@ export default function product() {
     }
     getBidData()
   },[])
+
+  useEffect(() => {
+    onLogin((users) => {
+      if (users) {
+        setUserLogin(users);
+      } else {
+        window.location.href = "/";
+      }
+    })
+  }, [])
 
   return (
     <>
