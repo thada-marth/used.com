@@ -17,24 +17,30 @@ export default function Index() {
 
   const loginWithGoogle = async () => {
     try {
-        const { user } = await auth.signInWithPopup(googleProvider);
-        // const response = await axios.post('/api/users', {
-        //     username: user.displayName,
-        //     email: user.email,
-        //     uid: user.uid
-        // })
-        
-        
-        window.location.href = '/product';
+      const { user } = await auth.signInWithPopup(googleProvider);
+
+      // Save user data to Firestore
+      const userData = {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL,
+      };
+      setUserData(userData);
+      await axios.post('/api/user', userData);
+
+      // Redirect to the product page
+      window.location.href = '/';
     } catch (err) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: err.message,
-        })
-        console.log(err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: err.message,
+      })
+      console.log(err);
     }
-}
+  }
+
 
   return (
     <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
@@ -51,19 +57,24 @@ export default function Index() {
           </div>
         </div>
       </div>
-      {/* <div>
-        <div className='bg-white p-10 rounded-lg shadow-lg'>
-          <div className=''>
-            <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]' />
-            <div className='bg-yellow-500 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-yellow-700'
 
-            >Search</div>
-          </div>
-          <div>
-            <div className='bg-green-700 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-green-800'>Create</div>
-          </div>
-        </div>
-      </div> */}
+          {/* <div>
+            <div className='bg-white p-10 rounded-lg shadow-lg'>
+              <div className=''>
+                <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]' />
+                <div className='bg-yellow-500 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-yellow-700'
+
+                >Search</div>
+              </div>
+              <div>
+                <div className='bg-green-700 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-green-800'>Create</div>
+              </div>
+            </div>
+          </div>  */}
+        
+          
+      
+       
     </div>
   )
 }
