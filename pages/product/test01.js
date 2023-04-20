@@ -81,27 +81,10 @@ export default function Example() {
     }
     getBidData()
     //SessionOver
-    const targetEndTime = new Date("2023-04-18T18:12:05");
+    const targetEndTime = new Date("2023-04-20T12:10:05");
 
     const timer = setTimeout(() => {
       setSessionOver(true);
-      let data = {
-        name: 'Marthx',
-        email: "marthx001@gmail.com",
-        message: "test1",
-        subject: "End",
-        to: "HOST or BIDDER" 
-      }
-      fetch('/api/email', {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }).then((res) => {
-        console.log('Response received')
-      })
     }, targetEndTime.getTime() - Date.now());
 
     return () => {

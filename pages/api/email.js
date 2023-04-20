@@ -13,12 +13,12 @@ export default function (req, res) {
       secure: true,
     })
     const mailData = {
-      from: 'used.association@gmail.com',
+      from: 'Used.com',
       to: req.body.email,
-      subject: `Message From ${req.body.name}`,
+      subject: `${req.body.subject}`,
       text: req.body.message + " | Sent from: " + req.body.email,
       html: `<div>${req.body.message}</div><p>Sent from:
-      ${req.body.email}</p>`
+      Used.com</p>`
     }
     transporter.sendMail(mailData, function (err, info) {
       if(err)
