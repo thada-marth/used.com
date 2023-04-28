@@ -150,7 +150,7 @@ export default function Example() {
     <div>
       {SessionOver ? (
       <div>
-        <h1>Session is Over</h1>
+        <h1>winner and product detail</h1>
       </div> ) : (
         <>
         <Navbar />

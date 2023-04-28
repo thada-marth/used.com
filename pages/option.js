@@ -2,9 +2,12 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { onLogin } from '../firebase/user'
 import Link from 'next/link';
+import Swal from "sweetalert2";
+import { firestore } from '../firebase/firebase';
 
 export default function option() {
     const [userLogin, setUserLogin] = useState(null);
+    const [pin, setPin] = useState(null);
 
     useEffect(() => {
         onLogin((users) => {
@@ -16,13 +19,41 @@ export default function option() {
         })
     }, [])
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (pin) {
+            firestore.collection("products").doc(pin).get().then((doc) => {
+                if (doc.exists) {
+                    window.location.href = "/auction?pin=" + pin;
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Pin code is not correct",
+                    });
+                }
+            })
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Please enter pin code",
+            });
+        }
+    }
+
+
+
     return (
         <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
             <div>
                 <div className='bg-white p-10 rounded-lg shadow-lg'>
                     <div className=''>
-                        <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]' />
+                        <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]'
+                            onChange={(e) => setPin(e.target.value)}
+                        />
                         <div className='bg-yellow-500 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-yellow-700'
+                            onClick={handleSubmit}
                         >Search</div>
                     </div>
                     <div className='mt-4 font-bold text-xl text-center'>
@@ -30,7 +61,7 @@ export default function option() {
                     </div>
                     <div>
                         <Link href='/createhost'>
-                        <div className='bg-green-700 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-green-800'>Create Auction Room</div>
+                            <div className='bg-green-700 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-green-800'>Create Auction Room</div>
                         </Link>
                     </div>
                 </div>
