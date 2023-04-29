@@ -9,7 +9,7 @@ export default async function (req, res) {
         const ProductData = await firestore.collection('products').doc(req.body.PIN).get()
         const OwnerData = await firestore.collection('users').doc(ProductData.data().Owner.uid).get()
         //wait for adding Bidder to product db and then fix line 12
-        const BidderData = await firestore.collection('users').doc(ProductData.data().Owner.uid).get()
+        const BidderData = await firestore.collection('users').doc(ProductData.data().bidderUid).get()
         //OWNER
         let data = {
           name: OwnerData.data().displayName,

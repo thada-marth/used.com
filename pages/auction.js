@@ -69,6 +69,7 @@ export default function Auction() {
     const [bidPrice, setBidPrice] = useState()
     const [showInputBid, setShowInputBid] = useState(false)
     const [noOwnerButton , setNoOwnerButton] = useState(false)
+    const [bidder , setBidder] = useState()
     const [currentTime, setCurrentTime] = useState(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"))
     const [pin, setPin] = useState(null);
     const [userLogin, setUserLogin] = useState(null);
@@ -90,6 +91,11 @@ export default function Auction() {
         const productData = await firestore.collection('products').doc(pin).get()
         setProductData(productData.data())
         return productData.data()
+    }
+
+    const getBidderData = async (bidderUID) => {
+        const bidderData = await firestore.collection('users').doc(bidderUID).get()
+        return bidderData.data()
     }
 
     useEffect(() => {
@@ -129,37 +135,40 @@ export default function Auction() {
             if(values[0].uid == values[1].Owner.uid){
                 setNoOwnerButton(true)
             }
-        });
 
-        const getBidData = async () => {
-            const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF').get()
-            setCurrentBid(bidData.data().bidPrice)
-            setCurrentTime((new Date(bidData.data().timeStamp)))
-            // console.log(typeof (bidData.data().timeStamp));
-        }
-        getBidData()
-        //SessionOver
+            const getBidData = async () => {
+                setCurrentBid(values[1].currentBid);
+                setCurrentTime(new Date(values[1].bidTime))
+                const bidderData = await getBidderData(values[1].bidderUid)
+                setBidder(bidderData.displayName)
+            }
+            getBidData()
+        });
     }, [])
 
 
-    const handleAddBid = async () => {
-        const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF')
-        bidData.set({
-            bidPrice: bidPrice,
-            timeStamp: new Date().valueOf()
+    const handleAddBid = async (bidPrice) => {
+        console.log(currentBid)
+        const bidData = await firestore.collection('products').doc(pin)
+        bidData.update({
+            currentBid: bidPrice,
+            bidTime: new Date().valueOf(),
+            bidderUid : userLogin.uid,
         })
     }
 
     const biddingFunction = () => {
         if (bidPrice > currentBid) {
             setCurrentBid(bidPrice)
+            setCurrentTime(new Date())
+            setBidder(userLogin.displayName)
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Your bid is accepted!',
             })
+            handleAddBid(bidPrice)
             setShowInputBid(false)
-            handleAddBid()
         } else {
             Swal.fire({
                 icon: 'error',
@@ -201,7 +210,7 @@ export default function Auction() {
                 <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
                     <div className='bg-white p-10 rounded-lg shadow-lg'>
                         <div className='text-center font-semibold text-3xl text-gray-900 mb-4'>Auction Ended</div>
-                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Winner: Bidder_Name</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Winner: K.{bidder}</div>
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Product: {productData.productName}</div>
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Final Price: ฿{productData.currentBid}</div>
                         <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Please contact the owner to arrange payment.</div>
@@ -268,10 +277,10 @@ export default function Auction() {
                                     </div>
                                     <div className="flex text-lg mt-5 font-semibold justify-between tracking-tight gap-10 text-gray-900 bg-gray-100 px-5  p-3 rounded-lg">
                                         <div className="font-semibold">
-                                            <div>Current Bid by @Bidder_Name</div>
+                                            <div>Current Bid by {bidder}</div>
                                             <div className="text-gray-400 text-sm"> {moment(currentTime.toString()).format('MMMM Do YYYY, h:mm:ss a')} </div>
                                         </div>
-                                        <div className="text-2xl align-middle flex items-center  ">{productData.currentBid} Baht</div>
+                                        <div className="text-2xl align-middle flex items-center  ">{currentBid} Baht</div>
 
                                     </div>
                                     {noOwnerButton ? 

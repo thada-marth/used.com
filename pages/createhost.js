@@ -42,6 +42,8 @@ export default function createhost() {
                 end: new Date().valueOf() + hour * 60 * 60 * 1000 + minute * 60 * 1000,
                 created: new Date().valueOf(),
                 pin: generatePin(),
+                bidderUid : userLogin.uid,
+                bidTime : new Date().valueOf(),
             };
 
             firestore
