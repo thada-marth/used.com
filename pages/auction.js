@@ -79,6 +79,8 @@ export default function Auction() {
         minute: "",
         image: "",
     });
+    const [countDown, setCountDown] = useState(0)
+    const [showCountDown, setShowCountDown] = useState(false);
 
     //SessionOver
     const [SessionOver, setSessionOver] = useState(false);
@@ -106,6 +108,8 @@ export default function Auction() {
             const targetEndTime = async () => {
                 const endTime = new Date(Number(productData.end));
                 const timeRemaining = endTime.getTime() - Date.now();
+                setCountDown(productData.end)
+                setShowCountDown(true)
                 const timer = setTimeout(() => {
                   setSessionOver(true);
                 }, timeRemaining);
@@ -246,8 +250,9 @@ export default function Auction() {
                                         <p className="mb-2 font-semibold text-gray-400">Time Left</p>
                                         <div className="flex items-center">
                                             <div className="flex gap-3 items-center text-xl font-semibold text-white">
-                                                <Countdown date={Date.now() + 1022223100} renderer={renderer}>
-                                                </Countdown>
+                                                <div>
+                                                {showCountDown ? (<div><Countdown date={countDown} renderer={renderer}></Countdown><p>Until : {new Date().toLocaleString('en-US', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}</p></div>) : (<p>loading...</p>)}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -256,7 +261,7 @@ export default function Auction() {
                                             <div>Current Bid by @Bidder_Name</div>
                                             <div className="text-gray-400 text-sm"> {moment(currentTime.toString()).format('MMMM Do YYYY, h:mm:ss a')} </div>
                                         </div>
-                                        <div className="text-2xl align-middle flex items-center  ">{currentBid} Baht</div>
+                                        <div className="text-2xl align-middle flex items-center  ">{productData.currentBid} Baht</div>
 
                                     </div>
                                     <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
