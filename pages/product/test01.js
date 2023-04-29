@@ -111,7 +111,7 @@ export default function Example() {
       setShowInputBid(false)
       handleAddBid()
     } else {
-      console.log("โง่")
+      // console.log("โง่")
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
@@ -239,7 +239,7 @@ export default function Example() {
                 </div>
                 <div className=" flex text-lg mt-5 font-semibold tracking-tight gap-10 text-gray-900 bg-gray-100 px-5  p-3 rounded-lg">
                   <div className="font-semibold">
-                    <div>Current Bid by @Thada</div>
+                    <div>Current Bid by @Bidder_Name</div>
                     <div className="text-gray-400 text-sm"> {moment(currentTime.toString()).format('MMMM Do YYYY, h:mm:ss a')} </div>
                   </div>
                   <div className="text-2xl align-middle flex items-center  ">$ {currentBid}</div>
