@@ -37,6 +37,7 @@ export default function confirmhost() {
             <div>
                 <div className='bg-white p-10 rounded-lg shadow-lg'>
                     <div className=''>
+                        <div className=' text-center font-semibold text-4xl mb-4'>Auction Started!!</div>
                         <div className=' text-center font-semibold text-2xl mb-4'>Your PIN</div>
                         <div className=' text-center font-semibold text-5xl border-2 border-gray-500 p-4 rounded-lg'>{pin}</div>
                         <div className='text-center font-medium text-md mt-2'>One-time use PIN code please keep your pin before exiting this page.</div>

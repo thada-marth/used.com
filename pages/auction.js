@@ -68,6 +68,8 @@ export default function Auction() {
     const [currentBid, setCurrentBid] = useState()
     const [bidPrice, setBidPrice] = useState()
     const [showInputBid, setShowInputBid] = useState(false)
+    const [noOwnerButton , setNoOwnerButton] = useState(false)
+    const [bidder , setBidder] = useState()
     const [currentTime, setCurrentTime] = useState(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"))
     const [pin, setPin] = useState(null);
     const [userLogin, setUserLogin] = useState(null);
@@ -79,6 +81,8 @@ export default function Auction() {
         minute: "",
         image: "",
     });
+    const [countDown, setCountDown] = useState(0)
+    const [showCountDown, setShowCountDown] = useState(false);
 
     //SessionOver
     const [SessionOver, setSessionOver] = useState(false);
@@ -86,63 +90,86 @@ export default function Auction() {
     const getProductFromPin = async (pin) => {
         const productData = await firestore.collection('products').doc(pin).get()
         setProductData(productData.data())
+        return productData.data()
+    }
+
+    const getBidderData = async (bidderUID) => {
+        const bidderData = await firestore.collection('users').doc(bidderUID).get()
+        return bidderData.data()
     }
 
     useEffect(() => {
+        const userPromise = new Promise ((rev,rej) => {
+            onLogin((users) => {
+                if (users) {
+                    setUserLogin(users);
+                } else {
+                    window.location.href = "/";
+                }
+                rev(users)
+            })
+        });
 
-        onLogin((users) => {
-            if (users) {
-                setUserLogin(users);
-            } else {
-                window.location.href = "/";
+        const productPromise = new Promise ((rev,rej) => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            setPin(urlParams.get('pin'));
+            getProductFromPin(urlParams.get('pin')).then((productData) => {rev(productData)})
+        });
+
+        Promise.all([userPromise,productPromise]).then((values) => {
+            const targetEndTime = async () => {
+                const endTime = new Date(Number(values[1].end));
+                const timeRemaining = endTime.getTime() - Date.now();
+                setCountDown(values[1].end)
+                setShowCountDown(true)
+                const timer = setTimeout(() => {
+                  setSessionOver(true);
+                }, timeRemaining);
+                
+                return () => {
+                  clearTimeout(timer);
+                };
+              };
+            targetEndTime();
+            if(values[0].uid == values[1].Owner.uid){
+                setNoOwnerButton(true)
             }
-        })
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        setPin(urlParams.get('pin'));
-        getProductFromPin(urlParams.get('pin'))
-
-        const getBidData = async () => {
-            const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF').get()
-            setCurrentBid(bidData.data().bidPrice)
-            setCurrentTime((new Date(bidData.data().timeStamp)))
-            // console.log(typeof (bidData.data().timeStamp));
-        }
-        getBidData()
-        //SessionOver
-        const targetEndTime = new Date("2023-05-20T12:10:05");
-
-        const timer = setTimeout(() => {
-            setSessionOver(true);
-        }, targetEndTime.getTime() - Date.now());
-
-        return () => {
-            clearTimeout(timer);
-        };
+            const getBidData = async () => {
+                setCurrentBid(values[1].currentBid);
+                setCurrentTime(new Date(values[1].bidTime))
+                const bidderData = await getBidderData(values[1].bidderUid)
+                setBidder(bidderData.displayName)
+            }
+            getBidData()
+        });
     }, [])
 
 
-    const handleAddBid = async () => {
-        const bidData = await firestore.collection('bids').doc('0gi5R583ppFj27ly59oF')
-        bidData.set({
-            bidPrice: bidPrice,
-            timeStamp: new Date().valueOf()
+    const handleAddBid = async (bidPrice) => {
+        console.log(currentBid)
+        const bidData = await firestore.collection('products').doc(pin)
+        bidData.update({
+            currentBid: bidPrice,
+            bidTime: new Date().valueOf(),
+            bidderUid : userLogin.uid,
         })
     }
 
     const biddingFunction = () => {
         if (bidPrice > currentBid) {
             setCurrentBid(bidPrice)
+            setCurrentTime(new Date())
+            setBidder(userLogin.displayName)
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Your bid is accepted!',
             })
+            handleAddBid(bidPrice)
             setShowInputBid(false)
-            handleAddBid()
         } else {
-            console.log("โง่")
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -180,12 +207,19 @@ export default function Auction() {
     return (
         <div>
             {SessionOver ? (
-                <div>
-                    <h1>winner and product detail</h1>
+                <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
+                    <div className='bg-white p-10 rounded-lg shadow-lg'>
+                        <div className='text-center font-semibold text-3xl text-gray-900 mb-4'>Auction Ended</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Winner: K.{bidder}</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Product: {productData.productName}</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Final Price: ฿{productData.currentBid}</div>
+                        <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Please contact the owner to arrange payment.</div>
+                        <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Thank you for participating in this auction.</div>
+                    </div>
                 </div>) : (
                 <>
-                        <div className="bg-[#0c1324]">
-                            <div className="text-xl absolute top-5 right-8 text-white ">PIN : {pin}</div>
+                    <div className="bg-[#0c1324]">
+                        <div className="text-xl absolute top-5 right-8 text-white ">PIN : {pin}</div>
                         <div className="pt-6">
                             {/* Image gallery */}
                             <div className="mx-auto mt-10 max-w-2xl ">
@@ -224,7 +258,7 @@ export default function Auction() {
                             {/* Product info */}
                             <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 ">
                                 <div className="">
-                                        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                                    <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                                         {productData.productName}
                                     </h1>
                                 </div>
@@ -234,25 +268,29 @@ export default function Auction() {
                                     <div className="mt-6">
                                         <p className="mb-2 font-semibold text-gray-400">Time Left</p>
                                         <div className="flex items-center">
-                                                <div className="flex gap-3 items-center text-xl font-semibold text-white">
-                                                <Countdown date={Date.now() + 1022223100} renderer={renderer}>
-                                                </Countdown>
+                                            <div className="flex gap-3 items-center text-xl font-semibold text-white">
+                                                <div>
+                                                {showCountDown ? (<div><Countdown date={countDown} renderer={renderer}></Countdown><p>Until : {new Date().toLocaleString('en-US', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}</p></div>) : (<p>loading...</p>)}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="flex text-lg mt-5 font-semibold justify-between tracking-tight gap-10 text-gray-900 bg-gray-100 px-5  p-3 rounded-lg">
                                         <div className="font-semibold">
-                                            <div>Current Bid by @Thada</div>
+                                            <div>Current Bid by {bidder}</div>
                                             <div className="text-gray-400 text-sm"> {moment(currentTime.toString()).format('MMMM Do YYYY, h:mm:ss a')} </div>
                                         </div>
                                         <div className="text-2xl align-middle flex items-center  ">{currentBid} Baht</div>
 
                                     </div>
-                                    <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
-                                        onClick={() => setShowInputBid(!showInputBid)}
-                                    >
-                                        Place a Bid
-                                    </div>
+                                    {noOwnerButton ? 
+                                    (<div className="bg-red-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-not-allowed">
+                                    Bidding is not permitted by the owner.
+                                    </div>) : 
+                                    (<div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
+                                    onClick={() => setShowInputBid(!showInputBid)}>
+                                    Place a Bid
+                                    </div>)}
 
                                     {showInputBid && (
                                         <div className="mt-4">
@@ -298,7 +336,7 @@ export default function Auction() {
                                         <h3 className="sr-only">Description</h3>
 
                                         <div className="space-y-6">
-                                                <p className="text-base text-white">
+                                            <p className="text-base text-white">
                                                 {productData.description}
                                             </p>
                                         </div>

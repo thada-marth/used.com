@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { onLogin } from '../firebase/user'
 import Swal from "sweetalert2";
 import { firestore } from '../firebase/firebase';
+import { server } from '../config/tricker';
 
 export default function createhost() {
 
@@ -34,13 +35,15 @@ export default function createhost() {
             const data = {
                 productName: productname,
                 description: description,
-                startprice: startprice,
+                currentBid: startprice,
                 hour: hour,
                 minute: minute,
                 Owner: userLogin,
                 end: new Date().valueOf() + hour * 60 * 60 * 1000 + minute * 60 * 1000,
                 created: new Date().valueOf(),
                 pin: generatePin(),
+                bidderUid : userLogin.uid,
+                bidTime : new Date().valueOf(),
             };
 
             firestore
@@ -59,6 +62,24 @@ export default function createhost() {
                     return firestore.collection("products").doc(data.pin).set(data);
                 })
                 .then(() => {
+                    //Initialize Tricker
+                    let trickerPayload = {
+                        PIN: data.pin,
+                        endTime: data.end
+                    };
+                    // Send a POST request to the second API endpoint with the data
+                    const payloadResponse = fetch(`${server}/api/tricker`, {
+                        method: "POST",
+                        headers: {
+                        Accept: "application/json, text/plain, */*",
+                        "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(trickerPayload),
+                    }).then((res) => {
+                        console.log('created Tricker')
+                    })
+                })
+                .then(() => {
                     Swal.fire({
                         icon: "success",
                         title: "Create host success",
@@ -71,6 +92,29 @@ export default function createhost() {
                 .catch((error) => {
                     console.log(error);
                 });
+
+                //API
+                onLogin((users) => {
+                    //OWNER
+                    let payload = {
+                        name: users.displayName,
+                        email: users.email,
+                        message: `Your <h1>${data.productName}</h1><br><h2>${data.description}</h2><br>auction has been started on <br><b>${new Date(data.created)}</b><br> and will end at <br><b>${new Date(data.end)}</b><br> <h3>PIN : ${data.pin}</h3><br>url : ${server}/auction?pin=${data.pin}`,
+                        subject: `[Used] Your ${data.productName} Auction has been started (PIN : ${data.pin})`,
+                    };
+                    // Send a POST request to the second API endpoint with the data
+                    const response = fetch(`${server}/api/email`, {
+                        method: "POST",
+                        headers: {
+                        Accept: "application/json, text/plain, */*",
+                        "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(payload),
+                    }).then((res) => {
+                        console.log('Request Email')
+                    })
+                });
+
         } else {
             Swal.fire({
                 icon: "error",
