@@ -7,17 +7,18 @@ export default async function (req, res) {
     const timer = setTimeout(async () => {
       try {
         const ProductData = await firestore.collection('products').doc(req.body.PIN).get()
-        const OwnerData = await firestore.collection('users').doc(ProductData.data().owner_id).get()
-        const BidderData = await firestore.collection('users').doc(ProductData.data().bidder_id).get()
+        const OwnerData = await firestore.collection('users').doc(ProductData.data().Owner.uid).get()
+        //wait for adding Bidder to product db and then fix line 12
+        const BidderData = await firestore.collection('users').doc(ProductData.data().Owner.uid).get()
         //OWNER
         let data = {
           name: OwnerData.data().displayName,
           email: OwnerData.data().email,
-          message: `${ProductData.data().ProductName} >> Bidder Information : ${BidderData.data().displayName} email : ${BidderData.data().email} @ ${ProductData.data().currentBid} Baht `,
-          subject: `[Used] Your ${ProductData.data().ProductName} Auction has been ended ${req.body.PIN}`,
+          message: `Your<br><h1>${ProductData.data().productName}<br>${ProductData.data().description}</h1><br>>>Bidder Information : <br><b>${BidderData.data().displayName}<br>email : ${BidderData.data().email}</b><br> @ ${ProductData.data().currentBid} Baht<br> url : ${server}/auction?pin=${ProductData.data().pin} `,
+          subject: `[Used] Your ${ProductData.data().productName} Auction has been ended ${req.body.PIN}`,
           bidderName: BidderData.data().displayName,
           bidderEmail: BidderData.data().email,
-          productName : ProductData.data().ProductName,
+          productName : ProductData.data().productName,
           currentBid : ProductData.data().currentBid
         };
         // Send a POST request to the second API endpoint with the data
@@ -36,11 +37,11 @@ export default async function (req, res) {
         let data2 = {
             name: BidderData.data().displayName,
             email: BidderData.data().email,
-            message: `Congratulaion! K.${BidderData.data().displayName}. You won the ${ProductData.data().ProductName} Aucion >> Product Owner Information : ${OwnerData.data().displayName} email : ${OwnerData.data().email} @ ${ProductData.data().currentBid} Baht `,
-            subject: `[Used] ${ProductData.data().ProductName} winner result ${req.body.PIN}`,
+            message: `Congratulaion! <h2>K.${BidderData.data().displayName}.</h2><br>You won the <h1>${ProductData.data().productName}</h1><br>>> Product Owner Information : <b>${OwnerData.data().displayName}</b><br>email : <b>${OwnerData.data().email}</b><br>@ ${ProductData.data().currentBid} Baht <br> url : ${server}/auction?pin=${ProductData.data().pin}`,
+            subject: `[Used] ${ProductData.data().productName} winner result ${req.body.PIN}`,
             OwnerName: OwnerData.data().displayName,
             OwnerEmail: OwnerData.data().email,
-            productName : ProductData.data().ProductName,
+            productName : ProductData.data().productName,
             currentBid : ProductData.data().currentBid
           };
         // Send a POST request to the second API endpoint with the data
