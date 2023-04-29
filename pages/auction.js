@@ -111,7 +111,7 @@ export default function Auction() {
         }
         getBidData()
         //SessionOver
-        const targetEndTime = new Date("2023-05-20T12:10:05");
+        const targetEndTime = new Date("2023-04-20T12:10:05");
 
         const timer = setTimeout(() => {
             setSessionOver(true);
@@ -180,12 +180,19 @@ export default function Auction() {
     return (
         <div>
             {SessionOver ? (
-                <div>
-                    <h1>winner and product detail</h1>
+                <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
+                    <div className='bg-white p-10 rounded-lg shadow-lg'>
+                        <div className='text-center font-semibold text-3xl text-gray-900 mb-4'>Auction Ended</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Winner: @Thada</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Product: {productData.productName}</div>
+                        <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Final Price: ฿{currentBid}</div>
+                        <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Please contact the owner to arrange payment.</div>
+                        <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Thank you for participating in this auction.</div>
+                    </div>
                 </div>) : (
                 <>
-                        <div className="bg-[#0c1324]">
-                            <div className="text-xl absolute top-5 right-8 text-white ">PIN : {pin}</div>
+                    <div className="bg-[#0c1324]">
+                        <div className="text-xl absolute top-5 right-8 text-white ">PIN : {pin}</div>
                         <div className="pt-6">
                             {/* Image gallery */}
                             <div className="mx-auto mt-10 max-w-2xl ">
@@ -224,7 +231,7 @@ export default function Auction() {
                             {/* Product info */}
                             <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 ">
                                 <div className="">
-                                        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                                    <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
                                         {productData.productName}
                                     </h1>
                                 </div>
@@ -234,7 +241,7 @@ export default function Auction() {
                                     <div className="mt-6">
                                         <p className="mb-2 font-semibold text-gray-400">Time Left</p>
                                         <div className="flex items-center">
-                                                <div className="flex gap-3 items-center text-xl font-semibold text-white">
+                                            <div className="flex gap-3 items-center text-xl font-semibold text-white">
                                                 <Countdown date={Date.now() + 1022223100} renderer={renderer}>
                                                 </Countdown>
                                             </div>
@@ -298,7 +305,7 @@ export default function Auction() {
                                         <h3 className="sr-only">Description</h3>
 
                                         <div className="space-y-6">
-                                                <p className="text-base text-white">
+                                            <p className="text-base text-white">
                                                 {productData.description}
                                             </p>
                                         </div>
