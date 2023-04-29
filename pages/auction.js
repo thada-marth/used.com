@@ -68,6 +68,7 @@ export default function Auction() {
     const [currentBid, setCurrentBid] = useState()
     const [bidPrice, setBidPrice] = useState()
     const [showInputBid, setShowInputBid] = useState(false)
+    const [noOwnerButton , setNoOwnerButton] = useState(false)
     const [currentTime, setCurrentTime] = useState(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"))
     const [pin, setPin] = useState(null);
     const [userLogin, setUserLogin] = useState(null);
@@ -92,23 +93,29 @@ export default function Auction() {
     }
 
     useEffect(() => {
-        onLogin((users) => {
-            if (users) {
-                setUserLogin(users);
-            } else {
-                window.location.href = "/";
-            }
-        })
+        const userPromise = new Promise ((rev,rej) => {
+            onLogin((users) => {
+                if (users) {
+                    setUserLogin(users);
+                } else {
+                    window.location.href = "/";
+                }
+                rev(users)
+            })
+        });
 
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        setPin(urlParams.get('pin'));
-        getProductFromPin(urlParams.get('pin'))
-        .then((productData) => {
+        const productPromise = new Promise ((rev,rej) => {
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            setPin(urlParams.get('pin'));
+            getProductFromPin(urlParams.get('pin')).then((productData) => {rev(productData)})
+        });
+
+        Promise.all([userPromise,productPromise]).then((values) => {
             const targetEndTime = async () => {
-                const endTime = new Date(Number(productData.end));
+                const endTime = new Date(Number(values[1].end));
                 const timeRemaining = endTime.getTime() - Date.now();
-                setCountDown(productData.end)
+                setCountDown(values[1].end)
                 setShowCountDown(true)
                 const timer = setTimeout(() => {
                   setSessionOver(true);
@@ -119,6 +126,9 @@ export default function Auction() {
                 };
               };
             targetEndTime();
+            if(values[0].uid == values[1].Owner.uid){
+                setNoOwnerButton(true)
+            }
         });
 
         const getBidData = async () => {
@@ -264,11 +274,14 @@ export default function Auction() {
                                         <div className="text-2xl align-middle flex items-center  ">{productData.currentBid} Baht</div>
 
                                     </div>
-                                    <div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
-                                        onClick={() => setShowInputBid(!showInputBid)}
-                                    >
-                                        Place a Bid
-                                    </div>
+                                    {noOwnerButton ? 
+                                    (<div className="bg-red-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-not-allowed">
+                                    Bidding is not permitted by the owner.
+                                    </div>) : 
+                                    (<div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
+                                    onClick={() => setShowInputBid(!showInputBid)}>
+                                    Place a Bid
+                                    </div>)}
 
                                     {showInputBid && (
                                         <div className="mt-4">
