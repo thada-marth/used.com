@@ -8,6 +8,7 @@ import Swal from 'sweetalert2'
 import { firestore } from '../firebase/firebase';
 import moment from 'moment'
 import { onLogin } from '../firebase/user'
+import { useDocumentData } from 'react-firebase-hooks/firestore';
 
 
 const product = {
@@ -87,6 +88,9 @@ export default function Auction() {
     //SessionOver
     const [SessionOver, setSessionOver] = useState(false);
 
+    const [data] = useDocumentData(firestore.doc('products/'+pin));
+
+
     const getProductFromPin = async (pin) => {
         const productData = await firestore.collection('products').doc(pin).get()
         setProductData(productData.data())
@@ -136,19 +140,16 @@ export default function Auction() {
                 setNoOwnerButton(true)
             }
 
-            const getBidData = async () => {
-                setCurrentBid(values[1].currentBid);
+            if(data){
+                setCurrentBid(data.currentBid);
                 setCurrentTime(new Date(values[1].bidTime))
-                const bidderData = await getBidderData(values[1].bidderUid)
-                setBidder(bidderData.displayName)
+                const bidderData = getBidderData(values[1].bidderUid).then((e) => {setBidder(e.displayName)})
             }
-            getBidData()
         });
-    }, [])
+    }, [data])
 
 
     const handleAddBid = async (bidPrice) => {
-        console.log(currentBid)
         const bidData = await firestore.collection('products').doc(pin)
         bidData.update({
             currentBid: bidPrice,
@@ -158,7 +159,7 @@ export default function Auction() {
     }
 
     const biddingFunction = () => {
-        if (bidPrice > currentBid) {
+        if (Number(bidPrice) > Number(currentBid)) {
             setCurrentBid(bidPrice)
             setCurrentTime(new Date())
             setBidder(userLogin.displayName)
