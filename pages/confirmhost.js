@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { onLogin } from '../firebase/user'
 import Swal from "sweetalert2";
 
-export default function confirmhost() {
+export default function Confirmhost() {
 
     const [userLogin, setUserLogin] = useState(null);
     const [pin, setPin] = useState(null);

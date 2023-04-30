@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Swal from "sweetalert2";
 import { firestore } from '../firebase/firebase';
 
-export default function option() {
+export default function Option() {
     const [userLogin, setUserLogin] = useState(null);
     const [pin, setPin] = useState(null);
 

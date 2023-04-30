@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { firestore } from '../firebase/firebase';
 import { server } from '../config/tricker';
 
-export default function createhost() {
+export default function Createhost() {
 
     const [userLogin, setUserLogin] = useState(null);
 
