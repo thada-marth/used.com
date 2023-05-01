@@ -36,7 +36,7 @@ const concludeMail = async (e) => {
     bidderName: BidderData.data().displayName,
     bidderEmail: BidderData.data().email,
   };
-  await sendEmail(data1,"template_3dlc31t");
+  await sendEmail(data1,"template_5mjrv07");
 
   //BIDDER
   let data2 = {
@@ -50,16 +50,16 @@ const concludeMail = async (e) => {
     dateEnd : new Date(),
     pin : ProductData.data().pin,
   };
-  await sendEmail(data2,"template_xzo30wq");
+  await sendEmail(data2,"template_s53sshj");
   return (0)
 };
 
 const sendEmail = async (e,template) => {
     emailjs.send(
-        "service_2n5q8ab",
+        "service_6pi7a1b",
         template,
         e, // the values in your EmailJS template
-        "9rhdFpwiGuCUefeWl",
+        "YxytRzHwwrVf_XuHp",
       )
         .then(({ status }) => {
           // Show success message
