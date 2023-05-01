@@ -239,6 +239,9 @@ export default function Auction() {
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Final Price: ฿{productData.currentBid}</div>
                         <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Please contact the owner to arrange payment.</div>
                         <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Thank you for participating in this auction.</div>
+                        <div className="text-center">
+                            <button className="bg-[#0c1324] mt-5 text-white rounded-lg px-4 py-2 font-semibold hover:bg-gray-600" onClick={() => { window.location.href = "/option" }}>Back to Home</button>
+                        </div>
                     </div>
                 </div>) : (
                 <>
