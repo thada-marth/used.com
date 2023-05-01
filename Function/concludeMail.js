@@ -46,6 +46,9 @@ const concludeMail = async (e) => {
     OwnerEmail: OwnerData.data().email,
     productName: ProductData.data().productName,
     currentBid: ProductData.data().currentBid,
+    productDes : ProductData.data().description,
+    dateEnd : new Date(),
+    pin : ProductData.data().pin,
   };
   await sendEmail(data2,"template_xzo30wq");
   return (0)
