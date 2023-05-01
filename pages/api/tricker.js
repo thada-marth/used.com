@@ -59,12 +59,12 @@ export default async function (req, res) {
           }).then((res) => {
               console.log('Request Email')
           })
-  
+          
+          res.status(200).send(`End @ ${req.body.endTime}`)
       } catch (error) {
         console.error(error);
         res.status(500).json({ error: "An error occurred" });
       }
     }, targetEndTime.getTime() - Date.now());
-    res.status(200).send(`Start @ ${req.body.endTime}`)
   }
   
