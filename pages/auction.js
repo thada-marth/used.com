@@ -152,9 +152,16 @@ export default function Auction() {
                 const timeRemaining = endTime.getTime() - Date.now();
                 setCountDown(values[1].end)
                 setShowCountDown(true)
-                const timer = setTimeout(() => {
+                const timer = setTimeout( async () => {
                     setSessionOver(true);
-                    concludeMail(pin)
+                    let getBidTime = data?.bidTime
+                    if (Number(getBidTime) != 0){
+                        const editData = await firestore.collection('products').doc(pin).update({
+                            bidTime : 0,
+                        })
+                        console.log("Emailed")
+                        concludeMail(pin)
+                    }
                 }, timeRemaining);
 
                 return () => {
