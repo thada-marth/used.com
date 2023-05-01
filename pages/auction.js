@@ -3,6 +3,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { RadioGroup } from "@headlessui/react";
 import Navbar from "@/component/Navbar";
 import Countdown from "react-countdown";
+import { concludeMail } from "../Function/concludeMail"
 import { FiClock } from "react-icons/fi";
 import Swal from 'sweetalert2'
 import { firestore } from '../firebase/firebase';
@@ -145,6 +146,7 @@ export default function Auction() {
         });
 
         Promise.all([userPromise, productPromise]).then((values) => {
+            let oneTimeEmail = true;
             const targetEndTime = async () => {
                 const endTime = new Date(Number(values[1].end));
                 const timeRemaining = endTime.getTime() - Date.now();
@@ -152,6 +154,7 @@ export default function Auction() {
                 setShowCountDown(true)
                 const timer = setTimeout(() => {
                     setSessionOver(true);
+                    concludeMail(pin)
                 }, timeRemaining);
 
                 return () => {

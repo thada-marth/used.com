@@ -85,22 +85,22 @@ export default function Createhost() {
                     return firestore.collection("products").doc(data.pin).set(data);
                 })
                 .then(() => {
-                    //Initialize Tricker
-                    let trickerPayload = {
-                        PIN: data.pin,
-                        endTime: data.end
-                    };
-                    // Send a POST request to the second API endpoint with the data
-                    const payloadResponse = fetch(`${server}/api/tricker`, {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json, text/plain, */*",
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(trickerPayload),
-                    }).then((res) => {
-                        console.log('created Tricker')
-                    })
+                    // //Initialize Tricker
+                    // let trickerPayload = {
+                    //     PIN: data.pin,
+                    //     endTime: data.end
+                    // };
+                    // // Send a POST request to the second API endpoint with the data
+                    // const payloadResponse = fetch(`${server}/api/tricker`, {
+                    //     method: "POST",
+                    //     headers: {
+                    //         Accept: "application/json, text/plain, */*",
+                    //         "Content-Type": "application/json",
+                    //     },
+                    //     body: JSON.stringify(trickerPayload),
+                    // }).then((res) => {
+                    //     console.log('created Tricker')
+                    // })
                 })
                 .then(() => {
                     Swal.fire({
