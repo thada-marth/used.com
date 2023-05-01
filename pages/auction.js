@@ -231,34 +231,34 @@ export default function Auction() {
     return (
         <div>
             {SessionOver ? (
-                <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
-                    <div className='bg-white p-10 rounded-lg shadow-lg'>
+                <div className='bg-[#0c1324] h-screen flex items-center justify-center px-10 '>
+                    <div className='bg-white p-10 rounded-lg shadow-lg '>
                         <div className='text-center font-semibold text-3xl text-gray-900 mb-4'>Auction Ended</div>
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Winner: K.{bidder}</div>
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Product: {productData.productName}</div>
                         <div className='text-center font-semibold text-2xl text-gray-900 mb-4'>Final Price: ฿{productData.currentBid}</div>
                         <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Please contact the owner to arrange payment.</div>
                         <div className='text-center font-semibold text-lg text-gray-700 mb-4'>Thank you for participating in this auction.</div>
-                        <div className="text-center">
+                        <div className="text-center pt-5">
                             <button className="bg-[#0c1324] mt-5 text-white rounded-lg px-4 py-2 font-semibold hover:bg-gray-600" onClick={() => { window.location.href = "/option" }}>Back to Home</button>
                         </div>
                     </div>
                 </div>) : (
                 <>
-                    <div className="bg-[#0c1324]">
-                        <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
-                            <div className='flex'>
-                                <div >
-                                    <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
-                                </div>
-                                <div className='ml-2 mt-1'>
-                                    {userLogin?.displayName}
-                                </div>
-                                <div>
-                                    <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                    <div className="bg-[#0c1324] min-h-screen">
+                            <div className="text-xl absolute top-7 left-5 font-semibold  bg-white p-3 rounded-xl ">
+                                <div className='flex'>
+                                    <div >
+                                        <img src={userLogin?.photoURL} className='md:w-10 md:h-10 h-7 w-7 rounded-full' />
+                                    </div>
+                                    <div className='ml-2 md:mt-1'>
+                                        {userLogin?.displayName}
+                                    </div>
+                                    <div>
+                                        <BiLogOut className='ml-4 md:mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         <div className="text-xl absolute sm:top-[40px] top-[100px]  left-1/2 transform -translate-x-1/2 font-semibold bg-white p-3 rounded-xl ">
                             <div className='flex'>
                                 PIN : {pin}

@@ -65,23 +65,23 @@ export default function Option() {
 
     return (
         <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
-            <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
+            <div className="text-xl absolute top-7 left-5 font-semibold bg-white p-3 rounded-xl ">
                 <div className='flex'>
                     <div >
-                        <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
+                        <img src={userLogin?.photoURL} className='md:w-10 md:h-10 h-7 w-7 rounded-full' />
                     </div>
-                    <div className='ml-2 mt-1'>
+                    <div className='ml-2 md:mt-1'>
                         {userLogin?.displayName}
                     </div>
                     <div>
-                        <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                        <BiLogOut className='ml-4 md:mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
                     </div>
                 </div>
             </div>
-            <div>
-                <div className='bg-white p-10 rounded-lg shadow-lg'>
+            <div className='mx-5 '>
+                <div className='bg-white sm:p-10 p-5 rounded-lg shadow-lg'>
                     <div className=''>
-                        <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem]'
+                        <input type="text" placeholder='Enter your pin code ' className='p-5 rounded-lg border-2 mt-4 border-gray-300 font-semibold text-[1.4rem] w-full w-max-md'
                             onChange={(e) => setPin(e.target.value)}
                         />
                         <div className='bg-yellow-500 text-center  text-white font-bold text-[1.2rem] px-4 py-5 rounded-lg mt-5 cursor-pointer hover:bg-yellow-700'
