@@ -6,6 +6,10 @@ export default async function (req, res) {
     const targetEndTime = new Date(req.body.endTime);
     const timer = setTimeout(async () => {
       try {
+        const timeOutTest = await firestore.collection('users').doc('1nXzuz9BaSUMHvZVsv5x8u4URwx1')
+        timeOutTest.update({
+          displayName: 'timeOutTest'
+        })
         const ProductData = await firestore.collection('products').doc(req.body.PIN).get()
         const OwnerData = await firestore.collection('users').doc(ProductData.data().Owner.uid).get()
         //wait for adding Bidder to product db and then fix line 12
