@@ -160,27 +160,27 @@ export default function Createhost() {
     }, [])
 
     return (
-        <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
-            <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
+        <div className='bg-[#0c1324] min-h-screen flex items-center justify-center px-5'>
+            <div className="text-xl absolute top-7 left-5 font-semibold bg-white p-3 rounded-xl ">
                 <div className='flex'>
                     <div >
-                        <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
+                        <img src={userLogin?.photoURL} className='md:w-10 md:h-10 h-7 w-7 rounded-full' />
                     </div>
-                    <div className='ml-2 mt-1'>
+                    <div className='ml-2 md:mt-1'>
                         {userLogin?.displayName}
                     </div>
                     <div>
-                        <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                        <BiLogOut className='ml-4 md:mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
                     </div>
                 </div>
             </div>
-            <div className='mt-10'>
-                <div className='bg-white p-10 rounded-lg shadow-lg'>
+            <div className='sm:mt-10 mt-[90px] '>
+                <div className='bg-white sm:p-10 p-8 rounded-lg shadow-lg'>
                     <div>
-                        <form class="w-full max-w-lg font-semibold text-[1.2rem]">
+                        <form class="w-full max-w-lg font-semibold sm:text-[1rem] text-[14px]">
                             <div class="flex flex-wrap -mx-3 mb-6">
-                                <div class="w-full px-3">
-                                    <label class="block  text-gray-700 font-semibold text-[1.2rem] mb-2" for="grid-password">
+                                <div class="w-full px-3 ">
+                                    <label class="block  text-gray-700 font-semibold sm:text-[1.2rem] text-[16px] mb-2" for="grid-password">
                                         Product name
                                     </label>
                                     <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="productname" type="text" placeholder="Iphone 15"
@@ -191,7 +191,7 @@ export default function Createhost() {
                             </div>
                             <div class="flex flex-wrap -mx-3 mb-6">
                                 <div class="w-full px-3">
-                                    <label class="block  text-gray-700 font-semibold text-[1.2rem] mb-2" for="grid-password">
+                                    <label class="block  text-gray-700 font-semibold sm:text-[1.2rem] text-[16px] mb-2" for="grid-password">
                                         Description
                                     </label>
                                     <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="description" type="text" placeholder="test"
@@ -202,10 +202,10 @@ export default function Createhost() {
                             </div>
                             <div class="flex flex-wrap -mx-3 mb-6">
                                 <div class="w-full px-3">
-                                    <label class="block  text-gray-700 font-semibold text-[1.2rem] mb-2" for="grid-password">
+                                    <label class="block  text-gray-700 font-semibold sm:text-[1.2rem] text-[16px] mb-2" for="grid-password">
                                         Start price (THB)
                                     </label>
-                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="startprice" type="number" placeholder="2000"
+                                    <input class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 sm:text-[1.2rem] text-[16px] rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="startprice" type="number" placeholder="2000"
                                         onChange={(e) =>
                                             onChangeField("startprice", e.target.value)
                                         } />
@@ -214,7 +214,7 @@ export default function Createhost() {
                             <label className="block font-semibold">
                                 Time
                             </label>
-                            <div className="mt-3 flex gap-3 ">
+                            <div className="mt-3 flex gap-3  ">
                                 <div className="flex">
                                     <input
                                         type="number"

@@ -54,21 +54,21 @@ export default function Confirmhost() {
     }, [])
 
     return (
-        <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
-            <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
+        <div className='bg-[#0c1324] min-h-screen  flex items-center justify-center'>
+            <div className="text-xl absolute top-7 left-5 font-semibold  bg-white p-3 rounded-xl ">
                 <div className='flex'>
                     <div >
-                        <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
+                        <img src={userLogin?.photoURL} className='md:w-10 md:h-10 h-7 w-7 rounded-full' />
                     </div>
-                    <div className='ml-2 mt-1'>
+                    <div className='ml-2 md:mt-1'>
                         {userLogin?.displayName}
                     </div>
                     <div>
-                        <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                        <BiLogOut className='ml-4 md:mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
                     </div>
                 </div>
             </div>
-            <div>
+            <div className='mx-5 mt-20 xs:mt-0 overflow-y-auto'>
                 <div className='bg-white p-10 rounded-lg shadow-lg'>
                     <div className=''>
                         <div className=' text-center font-semibold text-4xl mb-4'>Auction Started!!</div>
