@@ -9,6 +9,8 @@ import { firestore } from '../firebase/firebase';
 import moment from 'moment'
 import { onLogin } from '../firebase/user'
 import { useDocumentData } from 'react-firebase-hooks/firestore';
+import { BiLogOut } from "react-icons/bi";
+import { auth } from '../firebase/firebase';
 
 
 const product = {
@@ -65,12 +67,14 @@ const product = {
         'Products with electrical plugs are designed for use in the US. Outlets and voltage differ internationally and this product may require an adapter or converter for use in your destination. Please check compatibility before purchasing.',
 };
 
+
+
 export default function Auction() {
     const [currentBid, setCurrentBid] = useState()
     const [bidPrice, setBidPrice] = useState()
     const [showInputBid, setShowInputBid] = useState(false)
-    const [noOwnerButton , setNoOwnerButton] = useState(false)
-    const [bidder , setBidder] = useState()
+    const [noOwnerButton, setNoOwnerButton] = useState(false)
+    const [bidder, setBidder] = useState()
     const [currentTime, setCurrentTime] = useState(moment(new Date()).format("DD/MM/YYYY HH:mm:ss"))
     const [pin, setPin] = useState(null);
     const [userLogin, setUserLogin] = useState(null);
@@ -88,7 +92,7 @@ export default function Auction() {
     //SessionOver
     const [SessionOver, setSessionOver] = useState(false);
 
-    const [data] = useDocumentData(firestore.doc('products/'+pin));
+    const [data] = useDocumentData(firestore.doc('products/' + pin));
 
 
     const getProductFromPin = async (pin) => {
@@ -102,8 +106,27 @@ export default function Auction() {
         return bidderData.data()
     }
 
+    const handleLogout = async () => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure you want to log out?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, log me out',
+                cancelButtonText: 'Cancel',
+            });
+
+            if (result.isConfirmed) {
+                await auth.signOut();
+                window.location.href = "/";
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     useEffect(() => {
-        const userPromise = new Promise ((rev,rej) => {
+        const userPromise = new Promise((rev, rej) => {
             onLogin((users) => {
                 if (users) {
                     setUserLogin(users);
@@ -114,36 +137,36 @@ export default function Auction() {
             })
         });
 
-        const productPromise = new Promise ((rev,rej) => {
+        const productPromise = new Promise((rev, rej) => {
             const queryString = window.location.search;
             const urlParams = new URLSearchParams(queryString);
             setPin(urlParams.get('pin'));
-            getProductFromPin(urlParams.get('pin')).then((productData) => {rev(productData)})
+            getProductFromPin(urlParams.get('pin')).then((productData) => { rev(productData) })
         });
 
-        Promise.all([userPromise,productPromise]).then((values) => {
+        Promise.all([userPromise, productPromise]).then((values) => {
             const targetEndTime = async () => {
                 const endTime = new Date(Number(values[1].end));
                 const timeRemaining = endTime.getTime() - Date.now();
                 setCountDown(values[1].end)
                 setShowCountDown(true)
                 const timer = setTimeout(() => {
-                  setSessionOver(true);
+                    setSessionOver(true);
                 }, timeRemaining);
-                
+
                 return () => {
-                  clearTimeout(timer);
+                    clearTimeout(timer);
                 };
-              };
+            };
             targetEndTime();
-            if(values[0].uid == values[1].Owner.uid){
+            if (values[0].uid == values[1].Owner.uid) {
                 setNoOwnerButton(true)
             }
 
-            if(data){
+            if (data) {
                 setCurrentBid(data.currentBid);
                 setCurrentTime(new Date(values[1].bidTime))
-                const bidderData = getBidderData(values[1].bidderUid).then((e) => {setBidder(e.displayName)})
+                const bidderData = getBidderData(values[1].bidderUid).then((e) => { setBidder(e.displayName) })
             }
         });
     }, [data])
@@ -154,7 +177,7 @@ export default function Auction() {
         bidData.update({
             currentBid: bidPrice,
             bidTime: new Date().valueOf(),
-            bidderUid : userLogin.uid,
+            bidderUid: userLogin.uid,
         })
     }
 
@@ -220,58 +243,54 @@ export default function Auction() {
                 </div>) : (
                 <>
                     <div className="bg-[#0c1324]">
-                        <div className="text-xl absolute top-5 right-8 text-white ">PIN : {pin}</div>
-                        <div className="pt-6">
-                            {/* Image gallery */}
-                            <div className="mx-auto mt-10 max-w-2xl ">
-                                {/* <div className="aspect-w-3 aspect-h-4 hidden overflow-hidden rounded-lg lg:block">
-                                    <img
-                                        src={product.images[0].src}
-                                        alt={product.images[0].alt}
-                                        className="h-full w-full object-cover object-center"
-                                    />
+                        <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
+                            <div className='flex'>
+                                <div >
+                                    <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
                                 </div>
-                                <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8">
-                                    <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                                        <img
-                                            src={product.images[1].src}
-                                            alt={product.images[1].alt}
-                                            className="h-full w-full object-cover object-center"
-                                        />
+                                <div className='ml-2 mt-1'>
+                                    {userLogin?.displayName}
+                                </div>
+                                <div>
+                                    <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="text-xl absolute sm:top-[40px] top-[100px]  left-1/2 transform -translate-x-1/2 font-semibold bg-white p-3 rounded-xl ">
+                            <div className='flex'>
+                                PIN : {pin}
+                            </div>
+                        </div>
+                        <div className="pt-6 lg:flex lg:h-screen">
+                            {/* Image gallery */}
+                            <div className="flex flex-col items-center align-middle mx-auto lg:flex-row">
+                                <div className="flex-1">
+                                    <div className="flex flex-col lg:flex-row">
+                                        <div className="flex-1">
+                                            <div className="flex items-center mt-[150px] lg:mt-10 justify-center w-full lg:h-100 h-50 rounded-xl px-5">
+                                                <img className="w-full h-full object-contain" src={product.images[3].src} alt="product" />
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="aspect-w-3 aspect-h-2 overflow-hidden rounded-lg">
-                                        <img
-                                            src={product.images[2].src}
-                                            alt={product.images[2].alt}
-                                            className="h-full w-full object-cover object-center"
-                                        />
-                                    </div>
-                                </div> */}
-                                <div className="aspect-w-1 aspect-h-1 sm:overflow-hidden sm:rounded-lg mx-5 ">
-                                    <img
-                                        src={product.images[3].src}
-                                        alt={product.images[3].alt}
-                                        className="h-full w-full object-cover object-center"
-                                    />
                                 </div>
                             </div>
 
                             {/* Product info */}
-                            <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 ">
-                                <div className="">
-                                    <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                                        {productData.productName}
-                                    </h1>
-                                </div>
+                            <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 items-center align-middle flex ">
                                 {/* Options */}
                                 <div className="mt-4 lg:row-span-3 lg:mt-0">
+                                    <div className="">
+                                        <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                                            {productData.productName}
+                                        </h1>
+                                    </div>
                                     {/* CountDown */}
                                     <div className="mt-6">
                                         <p className="mb-2 font-semibold text-gray-400">Time Left</p>
                                         <div className="flex items-center">
                                             <div className="flex gap-3 items-center text-xl font-semibold text-white">
                                                 <div>
-                                                {showCountDown ? (<div><Countdown date={countDown} renderer={renderer}></Countdown><p>Until : {new Date().toLocaleString('en-US', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}</p></div>) : (<p>loading...</p>)}
+                                                    {showCountDown ? (<div><Countdown date={countDown} renderer={renderer}></Countdown><p>Until : {new Date().toLocaleString('en-US', { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true })}</p></div>) : (<p>loading...</p>)}
                                                 </div>
                                             </div>
                                         </div>
@@ -284,14 +303,14 @@ export default function Auction() {
                                         <div className="text-2xl align-middle flex items-center  ">{currentBid} Baht</div>
 
                                     </div>
-                                    {noOwnerButton ? 
-                                    (<div className="bg-red-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-not-allowed">
-                                    Bidding is not permitted by the owner.
-                                    </div>) : 
-                                    (<div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
-                                    onClick={() => setShowInputBid(!showInputBid)}>
-                                    Place a Bid
-                                    </div>)}
+                                    {noOwnerButton ?
+                                        (<div className="bg-red-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-not-allowed">
+                                            Bidding is not permitted by the owner.
+                                        </div>) :
+                                        (<div className="bg-indigo-600 text-white text-center font-semibold p-3 mt-5 rounded-lg cursor-pointer hover:bg-indigo-700"
+                                            onClick={() => setShowInputBid(!showInputBid)}>
+                                            Place a Bid
+                                        </div>)}
 
                                     {showInputBid && (
                                         <div className="mt-4">
@@ -323,25 +342,24 @@ export default function Auction() {
                                             </div>
                                         </div>
                                     )}
+                                    <div className="py-10 text-white">
+                                        {/* Description and details */}
+                                        <div>
+                                            <h3 className="">Description</h3>
+
+                                            <div className="space-y-6">
+                                                <p className="text-base mt-3 text-white">
+                                                    {productData.description}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                     {/* <div className="bg-yellow-600 text-white text-center font-semibold p-3 mt-4 rounded-lg cursor-pointer hover:bg-yellow-700"
                                         onClick={() => forceBuy()}
                                     >
                                         Force Buy $ {product.forceBuyPrice}
                                     </div> */}
-                                </div>
-
-                                <div className="py-10 text-white">
-                                    {/* Description and details */}
-                                    <div>
-                                        <h3 className="sr-only">Description</h3>
-
-                                        <div className="space-y-6">
-                                            <p className="text-base text-white">
-                                                {productData.description}
-                                            </p>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>

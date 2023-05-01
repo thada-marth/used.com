@@ -4,6 +4,8 @@ import { onLogin } from '../firebase/user'
 import Link from 'next/link';
 import Swal from "sweetalert2";
 import { firestore } from '../firebase/firebase';
+import { BiLogOut } from "react-icons/bi";
+import { auth } from '../firebase/firebase';
 
 export default function Option() {
     const [userLogin, setUserLogin] = useState(null);
@@ -18,6 +20,25 @@ export default function Option() {
             }
         })
     }, [])
+
+    const handleLogout = async () => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure you want to log out?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, log me out',
+                cancelButtonText: 'Cancel',
+            });
+
+            if (result.isConfirmed) {
+                await auth.signOut(); 
+                window.location.href = "/";
+            }
+        } catch (error) {
+            console.error(error); 
+        }
+    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -42,10 +63,21 @@ export default function Option() {
         }
     }
 
-
-
     return (
         <div className='bg-[#0c1324] h-screen flex items-center justify-center '>
+            <div className="text-xl absolute top-5 left-8 font-semibold bg-white p-3 rounded-xl ">
+                <div className='flex'>
+                    <div >
+                        <img src={userLogin?.photoURL} className='w-10 h-10 rounded-full' />
+                    </div>
+                    <div className='ml-2 mt-1'>
+                        {userLogin?.displayName}
+                    </div>
+                    <div>
+                        <BiLogOut className='ml-4 mt-1 cursor-pointer ' size={30} onClick={handleLogout} />
+                    </div>
+                </div>
+            </div>
             <div>
                 <div className='bg-white p-10 rounded-lg shadow-lg'>
                     <div className=''>

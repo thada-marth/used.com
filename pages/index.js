@@ -2,7 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import { googleProvider, auth } from '../firebase/firebase'
@@ -40,6 +40,16 @@ export default function Index() {
       console.log(err);
     }
   }
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = '/option';
+      }
+    });
+  }, []);
+
+
 
 
   return (
